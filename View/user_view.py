@@ -2,6 +2,7 @@ from View import flight_view as fv
 from Controller import flight_controller as fc
 from Controller import auth_controller as auth
 import main
+from Controller.email_controller import kirimEmail
 
 
 class UserView:
@@ -56,3 +57,9 @@ class UserView:
                 UserView.menuUser(self)
             else:
                 print("Opsi tidak tersedia!")
+
+
+# Selesai, pengeriman struk melalui email
+# kirimEmail('fauzan.gifari30@gmail.com', '67088001', 'GA201',
+#            'Muhammad Fauzan Gifari', 'Samarinda', 'Surabaya',
+#            'Garuda Indonesia', 'B10D8ZAA1')
