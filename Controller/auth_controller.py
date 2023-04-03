@@ -4,12 +4,11 @@ from View import user_view
 import main
 import pwinput
 
+user_session = []
 
 class User:
-
-    user_session = []
-
     def __init__(self):
+        self.user_session = None
         self.logged_in = False
         self.main = main
         self.username = ""
@@ -61,7 +60,7 @@ class User:
                         self.logged_in = True
                         self.username = user["name"]
                         session_data = {"username": self.username}
-                        User.user_session.append(session_data)
+                        user_session.append(session_data)
                         user_view.UserView().menuUser()
                         return True
             else:
@@ -85,18 +84,13 @@ class User:
             return False
 
     def logout(self):
-        for session in User.user_session[:]:
-            if session["username"] == self.username:
-                print(f"User {self.username} berhasil logout")
-                User.user_session.clear(session)
-                self.logged_in = False
-                self.username = ""
+        self.user_session = []
         print("Tidak ada user yang login saat ini!")
 
 
     def profile(self):
         print("----------------------- PROFILE -------------------------")
-        data = User.user_session[0]["username"]
+        data = user_session[0]["username"]
         user = db.dataAcc.find_one({"name": data})
         if user:
             print("Nama: ", user["name"])

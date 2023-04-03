@@ -106,5 +106,3 @@ class Flight:
         else:
             print("Pilihan tidak tersedia!\n")
 
-
-s
