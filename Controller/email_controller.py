@@ -34,7 +34,6 @@ def kirimEmail(email, receipt_id, flight_id, name, from_location, to_location, p
         print("Dynamic Messages Sent!")
     except Exception as e:
         print("Error: {0}".format(e))
-    return str(response.status_code)
 
 
 kirimEmail('fauzan.gifari30@gmail.com', '67088001', 'GA201',
