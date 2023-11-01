@@ -1,65 +1,60 @@
-from View import flight_view as fv
 from Controller import flight_controller as fc
 from Controller import auth_controller as auth
-import main
-from Controller.email_controller import kirimEmail
+from Controller import user_controller as uc
+from View import main_view as main
+import os
 
 
 class UserView:
 
     def __init__(self):
-        self.flight = fc.Flight()
+        self.flight = fc.LinkedList()
         self.auth = auth.User()
-        self.view = fv.LinkedList()
+        self.user = uc.UserController()
 
-    def menuUser(self):
-        while True:
-            print("==================================")
-            print("|            M E N U             |")
-            print("==================================")
-            print("|-----> Menu yang tersedia <-----|")
-            print("|                                |")
-            print("|    1. Pesan Tiket Pesawat      |")
-            print("|    2. Booking Hotel            |")
-            print("|    3. Sign Out                 |")
-            print("|                                |")
-            print("==================================")
-            opsi = str(input("Tentukan opsi anda (1/2/3/4/5): "))
+    def menu_user(self):
+        try:
+            os.system('cls')
+            while True:
+                print("==================================")
+                print("|            M E N U             |")
+                print("==================================")
+                print("|-----> Menu yang tersedia <-----|")
+                print("|                                |")
+                print("|    1. Cari Tiket Pesawat       |")
+                print("|    2. Lihat Tiket Pesawat      |")
+                print("|    3. Riwayat Pembelian        |")
+                print("|    4. Isi Saldo                |")
+                print("|    5. Cek Profil               |")
+                print("|    6. Urutkan Data Pesawat     |")
+                print("|    7. Sign Out                 |")
+                print("|                                |")
+                print("==================================")
+                opsi = str(input("Tentukan opsi anda (1/2/3/4/5): "))
 
-            if opsi == '1':
-                pass
-            elif opsi == '2':
-                pass
-            elif opsi == '3':
-                main.MenuUtama().run()
-            else:
-                print("Opsi tidak tersedia!")
+                if opsi == '1':
+                    os.system('cls')
+                    self.user.buyTicket()
+                elif opsi == '2':
+                    os.system('cls')
+                    self.flight.display()
+                elif opsi == '3':
+                    os.system('cls')
+                    self.user.checkHistory()
+                elif opsi == '4':
+                    os.system('cls')
+                    self.user.addBalance()
+                elif opsi == '5':
+                    os.system('cls')
+                    self.auth.profile()
+                elif opsi == '6':
+                    self.flight.sort_flights()
+                elif opsi == '7':
+                    self.auth.logout()
+                    main.MenuUtama().run()
+                else:
+                    print("Opsi tidak tersedia!!")
 
-    def userFlight(self):
-        while True:
-            print("==================================")
-            print("|            M E N U             |")
-            print("==================================")
-            print("|-----> Menu yang tersedia <-----|")
-            print("|                                |")
-            print("|    1. Cari Tiket Pesawat       |")
-            print("|    2. Pemesanan Tiket          |")
-            print("|    3. Kembali                  |")
-            print("|                                |")
-            print("==================================")
-            opsi = str(input("Tentukan opsi anda (1/2/3/4/5): "))
-
-            if opsi == '1':
-                pass
-            elif opsi == '2':
-                pass
-            elif opsi == '3':
-                UserView.menuUser(self)
-            else:
-                print("Opsi tidak tersedia!")
-
-
-# Selesai, pengeriman struk melalui email
-# kirimEmail('fauzan.gifari30@gmail.com', '67088001', 'GA201',
-#            'Muhammad Fauzan Gifari', 'Samarinda', 'Surabaya',
-#            'Garuda Indonesia', 'B10D8ZAA1')
+        except KeyboardInterrupt:
+            print("\nTerjadi Kesalahan!")
+            exit()
