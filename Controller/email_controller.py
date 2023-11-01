@@ -1,41 +1,39 @@
-from sendgrid.helpers.mail import Mail
-from sendgrid import SendGridAPIClient
+from __future__ import print_function
+import sib_api_v3_sdk
+from sib_api_v3_sdk.rest import ApiException
+from pprint import pprint
+from dotenv import load_dotenv
+import random
+import os
 
-def kirimEmail(email, receipt_id, flight_id, name, from_location, to_location, plane, ticket_code):
-    message = Mail(
-        from_email='fauzan@janjianaja.com',
-        to_emails=email)
+load_dotenv()
 
-    message.dynamic_template_data = {
-        'subject': 'TRAVELOKA: Receipt #' + receipt_id,
-        'nomor_pesanan': receipt_id,
-        'nomor_penerbangan': flight_id,
-        'nama': name,
-        'email': email,
-        'asal_penerbangan': from_location,
-        'tujuan_penerbangan': to_location,
-        'pesawat': plane,
-        'kode_tiket': ticket_code,
-        'jam': '10:51',
-        'hari': 'Senin',
-        'tanggal': '10',
-        'bulan': 'Januari',
-        'tahun': '2023',
+configuration = sib_api_v3_sdk.Configuration()
+configuration.api_key['api-key'] = os.getenv('SENDINBLUE_API_KEY')
+
+
+def send_email(email, id_flight, name, asal, tujuan, pesawat, tanggal, waktu_keberangkatan, waktu_kedatangan, harga):
+    api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+    receipt = str(random.randint(100000, 999999))
+    ticket_code = str(random.randint(100000, 999999))
+    to = [{"email": email, "name": name}]
+    params = {
+        "RECEIPT":receipt,
+        "ID_FLIGHT": id_flight,
+        "NAMA": name,
+        "ASAL": asal,
+        "TUJUAN": tujuan,
+        "NAMA_PESAWAT": pesawat,
+        "TANGGAL": tanggal,
+        "WAKTU_KEBERANGKATAN": waktu_keberangkatan,
+        "WAKTU_KEDATANGAN": waktu_kedatangan,
+        "KODE_TIKET": ticket_code,
+        "HARGA": harga
     }
-    message.template_id = 'd-df19ec40d75b465c8f4ca6e7f29a4e61'
+    send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=to, params=params, template_id=1)
 
     try:
-        sg = SendGridAPIClient("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")
-        response = sg.send(message)
-        code, body, headers = response.status_code, response.body, response.headers
-        print(f"Response code: {code}")
-        print(f"Response headers: {headers}")
-        print(f"Response body: {body}")
-        print("Dynamic Messages Sent!")
-    except Exception as e:
-        print("Error: {0}".format(e))
-
-
-kirimEmail('fauzan.gifari30@gmail.com', '67088001', 'GA201',
-           'Muhammad Fauzan Gifari', 'Samarinda', 'Surabaya',
-           'Garuda Indonesia', 'B10D8ZAA1')
+        api_response = api_instance.send_transac_email(send_smtp_email)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling SMTPApi->send_transac_email: %s\n" % e)
